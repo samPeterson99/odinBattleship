@@ -1,0 +1,23 @@
+{
+  "name": "odinbattleship",
+  "version": "1.0.0",
+  "description": "A battleship game based on a prompt from the Odin Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samPeterson99/odinBattleship.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samPeterson99/odinBattleship/issues"
+  },
+  "homepage": "https://github.com/samPeterson99/odinBattleship#readme",
+  "devDependencies": {
+    "eslint": "^8.30.0",
+    "jest": "^29.3.1"
+  }
+}
