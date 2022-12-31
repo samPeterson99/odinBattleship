@@ -1,51 +1,56 @@
+import './styles.css';
+const { Ship, Player, Gameboard, arrayOfShortArraysSearch, redPlayRandom } = require("./battleshipLogic.js");
 
-function Ship(length) {
-    this.length = length;
-    this.hits = 0;
-    this.sunk = false;
-    this.coordinates = [];
-}
+const redBox = document.getElementById('redBox');
+const controlBox = document.getElementById('control');
+const blueBox = document.getElementById('blueBox');
 
-Ship.prototype.hit = function() {
-    this.hits++;
-    this.isItSunk();
-}
+const blue = new Player();
+const red = new Player();
 
-Ship.prototype.isItSunk = function() {
-    this.hits >= this.length ? this.sunk = true : this.sunk = false;
-}
 
-function Gameboard() {
-    this.missed = [];
-    this.shipsHit = [];
-    this.shipsAt = [];
-}
-//
-Gameboard.prototype.placeShip = function(ship, startCoord, endCoord) {
-    let newPush
-    if (startCoord.at(0) === endCoord.at(0)) {
-        for (let i = 0; i < ship.length; i++) {
-            newPush = startCoord.slice();
-            ship.coordinates.push(newPush);
-            this.shipsAt.push(newPush);
-            startCoord[1] += 1
+(function DOMBasics() {
+    const newGameButton = document.createElement('button');
+    newGameButton.innerHTML = 'Start New Game';
+    controlBox.appendChild(newGameButton)
+    generateBoard(redBox, red)
+    generateBoard(blueBox, blue)
+})();
+
+function generateBoard(element, player) {
+    const board = document.createElement('table');
+    const body = document.createElement('tbody');
+
+    for (let y = -1; y < 11; y++) {
+        const row = document.createElement('tr');
+        if (y === -1) {
+            for (let i = 0; i < 11; i++) {
+                const alph = ['', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
+                const cell = document.createElement('td');
+                cell.innerHTML = `${alph.at(i)}`;
+                row.appendChild(cell);
+            }
+        } else if (y > 0) {
+            for (let x = -1; x < 10; x++) {
+                const cell = document.createElement('td');
+
+                if (x === -1) {
+                    cell.innerHTML = `${y}`
+                } else {
+                    cell.addEventListener('click', () => {
+                        player.board.receiveAttack([x, y])
+                        console.log([x, y])
+                    })
+                }
+
+                row.appendChild(cell); 
+            }
         }
-    } else if (startCoord.at(1) === endCoord.at(1)) {
-        for (let i = 0; i < ship.length; i++) {
-            newPush = startCoord.slice();
-            ship.coordinates.push(newPush);
-            this.shipsAt.push(newPush);
-            startCoord[0] += 1
-        }
+        body.appendChild(row);
     }
-};
-
-function arrayOfShortArraysSearch(array, value) {
-    for (let index = 0; index < array.length; index++) {
-        if (array[index][0] === value[0] && array[index][1] === value[1]) {
-            return index
-        }
-    }
+    board.appendChild(body);
+    element.appendChild(board)
 }
 
-module.exports = { Ship, Gameboard, arrayOfShortArraysSearch };
+
+

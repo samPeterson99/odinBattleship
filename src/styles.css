@@ -1,0 +1,42 @@
+#content {
+    width: 100%;
+    height: 100em;
+    display: flex;
+    flex-direction: row;
+}
+button {
+    width: auto;
+    height: 20px;
+
+}
+
+#redBox, #blueBox, #control {
+    border: 1em solid;
+    height: 100%;
+}
+
+#redBox {
+    border-color: red;
+    width: 40%;
+}
+
+#blueBox {
+    border-color: blue;
+    width: 40%;
+}
+
+#control {
+    border-color: grey;
+    width: 20%;
+    display: flex;
+    justify-content: center;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    border: 4px solid black;
+    border-collapse: collapse;
+}

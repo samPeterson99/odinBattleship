@@ -2,9 +2,11 @@
   "name": "odinbattleship",
   "version": "1.0.0",
   "description": "A battleship game based on a prompt from the Odin Project",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "watch": "webpack --watch",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
@@ -17,7 +19,11 @@
   },
   "homepage": "https://github.com/samPeterson99/odinBattleship#readme",
   "devDependencies": {
+    "css-loader": "^6.7.3",
     "eslint": "^8.30.0",
-    "jest": "^29.3.1"
+    "jest": "^29.3.1",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
   }
 }
