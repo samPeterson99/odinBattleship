@@ -15,48 +15,87 @@ Ship.prototype.hit = function() {
 }
 
 Ship.prototype.isItSunk = function() {
-    this.hits >= this.length ? this.sunk = true : this.sunk = false;
+    if (this.hits === this.length) {
+        this.sunk = true;
+    }
+    isItOver();
 }
 
-function Gameboard() {
+function Gameboard(color) {
+    this.color = `${color}`;
     this.missed = [];
     this.shipsHit = [];
     this.shipsAt = [];
     this.spotPlayed = [];
 }
 
-function Player() {
-    this.board = new Gameboard();
+function Player(color) {
+    this.color = color;
+    this.health = 5;
+    this.board = new Gameboard(this.color);
     this.carrier = new Ship(5);
     this.battleship = new Ship(4);
     this.cruiser = new Ship(3);
     this.submarine = new Ship(3);
     this.destroyer = new Ship(2);
-
 }
 
+const blue = new Player("blue");
+const red = new Player("red");
 
+function isItOver() {
+    console.log(red.carrier.sunk)
+    if (red.carrier.sunk && red.battleship.sunk && red.cruiser.sunk && red.submarine.sunk && red.destroyer.sunk) {
+        console.log('blue wins')
+    } else if ( blue.carrier.sunk === true && blue.battleship.sunk === true && blue.cruiser.sunk === true && blue.submarine.sunk === true && blue.destroyer.sunk === true) {
+        console.log('red wins')
+    }
+}
+
+function shipInDOM(occupiedSpace) {
+    let selection = document.querySelector(occupiedSpace)
+    selection.classList.add("ship");
+}
+
+function missInDOM(selectedSpace) {
+    let selection = document.querySelector(selectedSpace);
+    selection.classList.add('miss');
+}
+
+function hitInDOM(selectedSpace) {
+    let selection = document.querySelector(selectedSpace);
+    selection.classList.add('hit');
+    selection.innerHTML = 'X'
+}
 
 //how to find what coordinates belong to what ship in the receiveAttack function
 Gameboard.prototype.placeShip = function(ship, startCoord, endCoord) {
     let newPush
     ships.push(ship);
+    let color = this.color;
     if (startCoord.at(0) === endCoord.at(0)) {
         for (let i = 0; i < ship.length; i++) {
             newPush = startCoord.slice();
+            console.log(newPush)
             ship.coordinates.push(newPush);
             this.shipsAt.push(newPush);
-            startCoord[1] += 1
+            startCoord[1] += 1;
+            shipInDOM(`.${color}${newPush.join('')}`);
         }
     } else if (startCoord.at(1) === endCoord.at(1)) {
-        for (let i = 0; i < ship.length; i++) {
+        for (let j = 0; j < ship.length; j++) {
             newPush = startCoord.slice();
             ship.coordinates.push(newPush);
             this.shipsAt.push(newPush);
             startCoord[0] += 1
+            shipInDOM(`.${color}${newPush.join('')}`);
         }
     }
 };
+
+
+
+
 
 function arrayOfShortArraysSearch(array, value) {
     for (let index = 0; index < array.length; index++) {
@@ -78,27 +117,29 @@ function whoDidItHit(attackCoord) {
 
 Gameboard.prototype.receiveAttack = function(attackCoord) {
     let index = arrayOfShortArraysSearch(this.shipsAt, attackCoord);
+    console.log(attackCoord)
+    let color = this.color;
+    //add already played conition?
     if (index === null) {
         this.missed.push(attackCoord);
-        return 'miss'
+        this.spotPlayed.push(attackCoord);
+        missInDOM(`.${color}${attackCoord.join('')}`);
+        console.log('miss')
     } else {
         this.shipsHit.push(attackCoord);
+        this.spotPlayed.push(attackCoord)
         whoDidItHit(attackCoord);
-        return 'hit'
+        hitInDOM(`.${color}${attackCoord.join('')}`);
+        console.log('hit')
     }
+
+
 }
 
-function redPlayRandom() {
-    let play
-    let testResult
-    do {
-        let x = Math.floor(Math.random() * 9);
-        let y = Math.floor(Math.random() * 9);   
-        play = [x, y];
-        testResult = arrayOfShortArraysSearch(blue.board.spotPlayed, play)
-    } while (testResult != null)
-    console.log(play)
-    return play
-}
 
-module.exports = { Ship, Player, Gameboard, arrayOfShortArraysSearch, redPlayRandom};
+
+
+
+
+
+module.exports = { Ship, Player, Gameboard, arrayOfShortArraysSearch, red, blue};
