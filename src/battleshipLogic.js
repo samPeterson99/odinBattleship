@@ -2,11 +2,15 @@
 
 const ships = [];
 
-function Ship(length) {
+
+function Ship(color, length, name) {
+    this.color = color;
     this.length = length;
+    this.name = name;
     this.hits = 0;
     this.sunk = false;
     this.coordinates = [];
+
 }
 
 Ship.prototype.hit = function() {
@@ -17,12 +21,23 @@ Ship.prototype.hit = function() {
 Ship.prototype.isItSunk = function() {
     if (this.hits === this.length) {
         this.sunk = true;
+        this.display.classList.add('sunk')
     }
     isItOver();
 }
 
+Ship.prototype.displayInDOM = function(box) {
+    this.display = document.createElement('h2');
+    this.display.innerHTML = `${this.name}`;
+    box.appendChild(this.display);
+
+    this.display.classList.add('shipDisplay');
+
+
+}
+
 function Gameboard(color) {
-    this.color = `${color}`;
+    this.color = color;
     this.missed = [];
     this.shipsHit = [];
     this.shipsAt = [];
@@ -33,24 +48,25 @@ function Player(color) {
     this.color = color;
     this.health = 5;
     this.board = new Gameboard(this.color);
-    this.carrier = new Ship(5);
-    this.battleship = new Ship(4);
-    this.cruiser = new Ship(3);
-    this.submarine = new Ship(3);
-    this.destroyer = new Ship(2);
+    this.carrier = new Ship(color, 5, 'Carrier');
+    this.battleship = new Ship(color, 4, 'Battleship');
+    this.cruiser = new Ship(color, 3, 'Cruiser');
+    this.submarine = new Ship(color, 3, 'Submarine');
+    this.destroyer = new Ship(color, 2, 'Destroyer');
 }
 
 const blue = new Player("blue");
 const red = new Player("red");
 
 function isItOver() {
-    console.log(red.carrier.sunk)
     if (red.carrier.sunk && red.battleship.sunk && red.cruiser.sunk && red.submarine.sunk && red.destroyer.sunk) {
-        console.log('blue wins')
-    } else if ( blue.carrier.sunk === true && blue.battleship.sunk === true && blue.cruiser.sunk === true && blue.submarine.sunk === true && blue.destroyer.sunk === true) {
-        console.log('red wins')
+        alert('blue wins')
+    } else if ( blue.carrier.sunk && blue.battleship.sunk && blue.cruiser.sunk && blue.submarine.sunk && blue.destroyer.sunk) {
+        alert('red wins')
     }
 }
+
+
 
 function shipInDOM(occupiedSpace) {
     let selection = document.querySelector(occupiedSpace)
@@ -72,11 +88,12 @@ function hitInDOM(selectedSpace) {
 Gameboard.prototype.placeShip = function(ship, startCoord, endCoord) {
     let newPush
     ships.push(ship);
+    console.log(ship)
     let color = this.color;
     if (startCoord.at(0) === endCoord.at(0)) {
         for (let i = 0; i < ship.length; i++) {
             newPush = startCoord.slice();
-            console.log(newPush)
+
             ship.coordinates.push(newPush);
             this.shipsAt.push(newPush);
             startCoord[1] += 1;
@@ -106,31 +123,33 @@ function arrayOfShortArraysSearch(array, value) {
     return null
 }
 
-function whoDidItHit(attackCoord) {
+function whoDidItHit(attackCoord, color) {
     for (let ship of ships) {
         let index = arrayOfShortArraysSearch(ship.coordinates, attackCoord)
-        if (Number.isInteger(index)) {
+        console.log(ship.color)
+        if (Number.isInteger(index) && ship.color === color) {
             ship.hit();
+            console.log(ship)
         }
     }
 }
 
 Gameboard.prototype.receiveAttack = function(attackCoord) {
     let index = arrayOfShortArraysSearch(this.shipsAt, attackCoord);
-    console.log(attackCoord)
     let color = this.color;
     //add already played conition?
     if (index === null) {
         this.missed.push(attackCoord);
         this.spotPlayed.push(attackCoord);
         missInDOM(`.${color}${attackCoord.join('')}`);
-        console.log('miss')
+
     } else {
         this.shipsHit.push(attackCoord);
         this.spotPlayed.push(attackCoord)
-        whoDidItHit(attackCoord);
+        whoDidItHit(attackCoord, this.color);
+        console.log(this.color)
         hitInDOM(`.${color}${attackCoord.join('')}`);
-        console.log('hit')
+
     }
 
 

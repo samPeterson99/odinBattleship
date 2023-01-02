@@ -57,3 +57,12 @@ td {
 .greyed {
     background-color: grey;
 }
+
+.shipDisplay {
+    color: blue;
+
+}
+
+.shipDisplay.sunk {
+    color: red;
+}

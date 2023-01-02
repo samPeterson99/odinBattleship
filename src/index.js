@@ -12,7 +12,21 @@ const blueBox = document.getElementById('blueBox');
     generateBoard(redBox, red)
     generateBoard(blueBox, blue)
 
+    red.carrier.displayInDOM(redBox);
+    red.battleship.displayInDOM(redBox);
+    red.cruiser.displayInDOM(redBox);
+    red.submarine.displayInDOM(redBox);
+    red.destroyer.displayInDOM(redBox);
+
+    blue.carrier.displayInDOM(blueBox);
+    blue.battleship.displayInDOM(blueBox);
+    blue.cruiser.displayInDOM(blueBox);
+    blue.submarine.displayInDOM(blueBox);
+    blue.destroyer.displayInDOM(blueBox);
+
 })();
+
+
 
 function generateBoard(element, player) {
     const board = document.createElement('table');
@@ -93,3 +107,4 @@ red.board.placeShip(red.carrier, [0, 0], [4, 0])
 red.board.placeShip(red.cruiser, [3, 4], [3, 6])
 red.board.placeShip(red.submarine, [9, 0], [9, 2])
 red.board.placeShip(red.destroyer, [8, 7], [8, 8])
+
